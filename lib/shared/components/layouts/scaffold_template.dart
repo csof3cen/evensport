@@ -11,6 +11,7 @@ class ScaffoldTemplate extends StatelessWidget {
     required this.children,
     this.showAppBar = false,
     this.showBottomNavigationBar = false,
+    this.showFloatingActionButton = false,
     Key? key,
   }) : super(key: key);
 
@@ -18,11 +19,12 @@ class ScaffoldTemplate extends StatelessWidget {
   final bool showAppBar;
   final List<Widget> children;
   final bool showBottomNavigationBar;
+  final bool showFloatingActionButton;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: showBottomNavigationBar
+      floatingActionButton: showFloatingActionButton
           ? FloatingActionButton(
               tooltip: "Ajouter un nouveau type de séance",
               onPressed: () {
@@ -64,6 +66,7 @@ class ScaffoldTemplate extends StatelessWidget {
       body: SafeArea(
         child: Container(
           margin: EdgeInsets.fromLTRB(kPadding, kPadding, kPadding, 0),
+          padding: EdgeInsets.only(bottom: kPadding),
           child: SingleChildScrollView(
             child: Column(
               children: children,

@@ -12,6 +12,7 @@ class HomeScreen extends StatelessWidget {
     return ScaffoldTemplate(
       showAppBar: true,
       showBottomNavigationBar: true,
+      showFloatingActionButton: true,
       children: [
         const StatusCard(),
         Container(
