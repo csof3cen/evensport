@@ -1,8 +1,8 @@
 import 'package:intl/intl.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:evensport/consts.dart';
 import 'package:flutter/material.dart';
 import 'package:evensport/shared/extensions/strings.dart';
-import 'package:evensport/shared/components/layouts/scaffold_template.dart';
 
 class CalendarScreen extends StatefulWidget {
   const CalendarScreen({Key? key}) : super(key: key);
@@ -12,6 +12,10 @@ class CalendarScreen extends StatefulWidget {
 }
 
 class _CalendarScreenState extends State<CalendarScreen> {
+  var coursesBox = Hive.openBox(runningsBoxName);
+
+  TextEditingController courseHourController = TextEditingController();
+
   var selectedDay = DateTime.now();
   @override
   Widget build(BuildContext context) {
@@ -87,10 +91,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
       );
     }
 
-    return ScaffoldTemplate(
-      index: 1,
-      showAppBar: true,
-      showBottomNavigationBar: true,
+    return Column(
       children: [
         Card(
           child: Container(
@@ -133,14 +134,11 @@ class _CalendarScreenState extends State<CalendarScreen> {
             child: Column(
               children: [
                 Container(
-                  width: double.maxFinite,
-                  height: 500,
                   padding: EdgeInsets.all(kPadding),
                   child: Column(
                     children: [
                       getCurrentWeekDays(),
                       Container(
-                        height: 350,
                         width: double.maxFinite,
                         margin: EdgeInsets.only(top: kPadding),
                         child: Column(
@@ -165,7 +163,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                 color: kWarningColor.withOpacity(0.1),
                               ),
                               child: const Text(
-                                "Séance de Footing à 17h20",
+                                "Séance de ...",
+                                // "Séance de ${coursesBox.get(weeksSeances)[DateTime.now().weekday - 1].type} à ",
                                 style: TextStyle(
                                   fontSize: 15,
                                   color: kWarningColor,
@@ -202,6 +201,57 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 ),
               ],
             ),
+          ),
+        ),
+        Container(
+          margin: EdgeInsets.only(top: kPadding),
+          child: TextButton(
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: ((context) {
+                  return Dialog(
+                    backgroundColor: Colors.transparent,
+                    child: Card(
+                      child: Container(
+                        margin: EdgeInsets.all(kCardPadding),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text("Heure des séances"),
+                            const SizedBox(height: 3),
+                            const TextField(
+                              autofocus: true,
+                              keyboardType: TextInputType.numberWithOptions(
+                                decimal: false,
+                                signed: false,
+                              ),
+                              decoration: InputDecoration(
+                                label: Text("Heure des séances"),
+                              ),
+                            ),
+                            SizedBox(height: kPadding),
+                            Center(
+                              child: ElevatedButton(
+                                onPressed: () async {
+                                  // await getBox().put(
+                                  //   courseHour,
+                                  //   courseHourController.value,
+                                  // );
+                                },
+                                child: const Text("Enregistrer"),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                }),
+              );
+            },
+            child: const Text("Modifier l'heure des séances"),
           ),
         ),
       ],

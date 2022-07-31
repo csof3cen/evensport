@@ -1,11 +1,47 @@
+import 'dart:async';
+
 import 'package:evensport/consts.dart';
+import 'package:evensport/shared/services/get_calories.dart';
 import 'package:flutter/material.dart';
 import 'package:heroicons/heroicons.dart';
+import 'package:evensport/shared/extensions/double.dart';
+import 'package:evensport/shared/services/formatted_stop_watch.dart';
 
-class StatusCard extends StatelessWidget {
-  const StatusCard({
+class StopWatchStatusCard extends StatefulWidget {
+  const StopWatchStatusCard({
     Key? key,
+    required this.seconds,
+    required this.calories,
   }) : super(key: key);
+
+  final double seconds;
+  final double calories;
+
+  @override
+  State<StopWatchStatusCard> createState() => _StopWatchStatusCardState();
+}
+
+class _StopWatchStatusCardState extends State<StopWatchStatusCard> {
+  double calories = 0.0;
+  incrementData() {
+    Timer.periodic(const Duration(seconds: 1), (timer) {
+      calories = getCalories(widget.seconds);
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => Timer.periodic(const Duration(seconds: 1), (timer) {
+        if (mounted) {
+          setState(() {
+            incrementData();
+          });
+        }
+      }),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +52,7 @@ class StatusCard extends StatelessWidget {
         child: Column(
           children: [
             Text(
-              "01 : 10 : 05",
+              formattedStopwatch(widget.seconds),
               textAlign: TextAlign.center,
               style: Theme.of(context)
                   .textTheme
@@ -54,9 +90,9 @@ class StatusCard extends StatelessWidget {
                 ),
                 Container(
                   margin: EdgeInsets.only(top: kPadding / 2.5),
-                  child: const Text(
-                    "220",
-                    style: TextStyle(
+                  child: Text(
+                    "${calories.toPrecision(3)}",
+                    style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 15,
                     ),

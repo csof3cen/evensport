@@ -2,8 +2,13 @@ import 'package:flutter/material.dart';
 
 // String
 const appName = "EvenSport";
+const runningsBoxName = "courses";
+const weeksSeances = "weeksseances";
+const coursesList = "courseslist";
+const courseHour = "coursehour";
 
 // Sizes
+double poids = 60;
 double kPadding = 20;
 double kCardPadding = 25;
 double kCardBorderRadius = 20;
